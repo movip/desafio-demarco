@@ -1,0 +1,52 @@
+# Material recebido para o desafio (uso local)
+/Desafio_Demarco.md
+/GUIA_REUNIAO_LOCAL.md
+*.[pP][nN][gG]
+
+# As quatro planilhas sintéticas recebidas fazem parte da reprodução pública.
+# Saídas de execução e arquivos privados permanecem locais.
+/data/private/
+/data/processed/
+/artifacts/
+/reports/
+
+# Credenciais e configurações locais
+.env
+.env.*
+!.env.example
+/credentials/
+/secrets/
+*service-account*.json
+*service_account*.json
+credentials.json
+token.json
+*.pem
+*.key
+*.p12
+*.pfx
+# Nomes padrão de chaves exportadas pelo Google Cloud, caso caiam na raiz.
+/*-????????????.json
+.aws/
+.codex/
+.agents/
+
+# Python e ferramentas locais
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+build/
+dist/
+
+# Editor e sistema operacional
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

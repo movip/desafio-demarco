@@ -1,0 +1,40 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "demarco-absenteismo"
+version = "0.1.0"
+description = "Pipeline de análise de absenteísmo com diagnóstico rastreável de planilhas."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "google-auth>=2.38,<3",
+    "google-cloud-bigquery>=3.30,<4",
+    "openpyxl>=3.1.5,<4",
+    "python-dotenv>=1,<2",
+    "requests>=2.32,<3",
+]
+
+[project.scripts]
+demarco = "demarco.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3,<9",
+    "ruff>=0.11,<1",
+    "sqlglot>=26,<31",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/demarco"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

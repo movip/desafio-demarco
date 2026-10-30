@@ -1,0 +1,42 @@
+{
+  "title": "Demarco | Absenteísmo e impacto em folha",
+  "period": {"start": "2025-06-01", "end": "2025-08-31"},
+  "theme": {"background": "#F8FAFC", "surface": "#FFFFFF", "text": "#0F172A", "accent": "#0D9488", "warning": "#B45309", "loss": "#B91C1C", "border": "#E2E8F0"},
+  "sources": {
+    "diario": "vw_dashboard_diario",
+    "gestao": "vw_dashboard_gestao",
+    "qualidade": "vw_dashboard_qualidade"
+  },
+  "metrics": [
+    {"id": "colaboradores_periodo", "source": "diario", "label": "Colaboradores no período", "type": "number", "formula": "COUNT_DISTINCT(id_colaborador_no_periodo)"},
+    {"id": "linhas_diarias", "source": "diario", "label": "Linhas observadas", "type": "number", "formula": "SUM(linhas_observadas)"},
+    {"id": "dias_pendentes", "source": "diario", "label": "Dias pendentes de validação", "type": "number", "formula": "SUM(dias_pendentes)"},
+    {"id": "faltas_integrais", "source": "diario", "label": "Faltas integrais confirmadas", "type": "number", "formula": "SUM(faltas_integrais)"},
+    {"id": "ausencias_parciais", "source": "diario", "label": "Ausências parciais confirmadas", "type": "number", "formula": "SUM(ausencias_parciais)"},
+    {"id": "horas_previstas", "source": "diario", "label": "Horas previstas validadas", "type": "decimal", "formula": "SUM(horas_previstas)"},
+    {"id": "horas_injustificadas", "source": "diario", "label": "Horas injustificadas confirmadas", "type": "decimal", "formula": "SUM(horas_injustificadas)"},
+    {"id": "horas_abonadas", "source": "diario", "label": "Horas abonadas", "type": "decimal", "formula": "SUM(horas_abonadas)"},
+    {"id": "dsrs_perdidos", "source": "diario", "label": "DSRs perdidos confirmados", "type": "number", "formula": "SUM(dsrs_perdidos)"},
+    {"id": "dsrs_indeterminados", "source": "diario", "label": "DSRs sem conclusão", "type": "number", "formula": "SUM(dsrs_indeterminados)"},
+    {"id": "dias_horas_sem_valoracao", "source": "diario", "label": "Dias com déficit sem preço", "type": "number", "formula": "SUM(dias_horas_sem_valoracao)"},
+    {"id": "dsrs_sem_valoracao", "source": "diario", "label": "DSRs perdidos sem preço", "type": "number", "formula": "SUM(dsrs_sem_valoracao)"},
+    {"id": "taxa_injustificada", "source": "diario", "label": "Taxa de horas injustificadas", "type": "percent", "formula": "CASE WHEN SUM(horas_previstas) > 0 THEN SUM(horas_injustificadas) / SUM(horas_previstas) END"},
+    {"id": "taxa_absenteismo_total", "source": "diario", "label": "Taxa de horas ausentes (abonadas + injustificadas)", "type": "percent", "formula": "CASE WHEN SUM(horas_previstas) > 0 THEN SUM(horas_ausencia_total) / SUM(horas_previstas) END"},
+    {"id": "taxa_faltas_dias", "source": "diario", "label": "Taxa de dias de falta integral", "type": "percent", "formula": "CASE WHEN SUM(dias_trabalho_validos) > 0 THEN SUM(faltas_integrais) / SUM(dias_trabalho_validos) END"},
+    {"id": "cobertura_linhas", "source": "diario", "label": "Cobertura das linhas observadas", "type": "percent", "formula": "CASE WHEN SUM(linhas_observadas) > 0 THEN SUM(linhas_elegiveis) / SUM(linhas_observadas) END"},
+    {"id": "desconto_conhecido", "source": "diario", "label": "Desconto conhecido (parcial)", "type": "currency", "formula": "CASE WHEN SUM(valor_conhecido_parcial) > 0 THEN SUM(valor_conhecido_parcial) WHEN SUM(dias_horas_sem_valoracao) = 0 AND SUM(dsrs_sem_valoracao) = 0 AND SUM(linhas_elegiveis) > 0 THEN 0 END"},
+    {"id": "registros_gestao", "source": "gestao", "label": "Colaboradores na gestão", "type": "number", "formula": "SUM(colaboradores)"},
+    {"id": "aptos_atualizacao", "source": "gestao", "label": "Aptos à atualização", "type": "number", "formula": "SUM(aptos_atualizacao)"},
+    {"id": "retidos_revisao", "source": "gestao", "label": "Retidos para revisão", "type": "number", "formula": "SUM(retidos_revisao)"},
+    {"id": "recomendacoes_pendentes", "source": "gestao", "label": "Recomendações pendentes", "type": "number", "formula": "SUM(recomendacoes_pendentes)"},
+    {"id": "suspensoes_recomendadas", "source": "gestao", "label": "Suspensões recomendadas", "type": "number", "formula": "SUM(suspensoes_recomendadas)"},
+    {"id": "dias_pendentes_distintos", "source": "qualidade", "label": "Dias distintos com pendência", "type": "number", "formula": "COUNT_DISTINCT(id_dia)"},
+    {"id": "ocorrencias_qualidade", "source": "qualidade", "label": "Ocorrências de qualidade", "type": "number", "formula": "SUM(ocorrencias)"}
+  ],
+  "pages": [
+    {"name": "1. Visão geral", "source": "diario", "date_filter": true, "filters": ["data", "departamento", "gestor"], "cards": ["faltas_integrais", "horas_injustificadas", "dsrs_perdidos", "desconto_conhecido", "taxa_injustificada", "dias_pendentes"]},
+    {"name": "2. Padrões de ausência", "source": "diario", "date_filter": true, "filters": ["data", "departamento", "gestor"], "heatmap": {"rows": "departamento", "columns": "dia_semana", "metric": "taxa_faltas_dias"}},
+    {"name": "3. Gestão de pessoas", "source": "gestao", "date_filter": false, "filters": ["departamento", "gestor", "acao_visualizacao"], "cards": ["registros_gestao", "aptos_atualizacao", "retidos_revisao", "suspensoes_recomendadas"]},
+    {"name": "4. Qualidade dos dados", "source": "qualidade", "date_filter": true, "filters": ["data", "departamento", "gestor", "motivo"], "cards": ["dias_pendentes_distintos", "ocorrencias_qualidade"]}
+  ]
+}
